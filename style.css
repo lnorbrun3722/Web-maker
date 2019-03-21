@@ -1,11 +1,12 @@
 body {padding-top: 75px;
-   padding-bottom: 150px=
+   padding-bottom: 75px;
+
 }
 nav a {
     color: white;
 
     label {
-        font-weight: 700;
+        font-weight: 700px;
 
     }
-}
+
