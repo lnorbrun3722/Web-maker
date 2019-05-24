@@ -59,13 +59,7 @@ export default class PageList extends Component {
                                     </li>
                                 )
                             )
-                        }
-                        {/* <li className="list-group-item">
-                            <a href="../Widget/Widget-list.html">Blog Post</a>
-                            <a className="float-right" href="Page-edit.html">
-                                <i className="fas fa-cog" />
-                            </a>
-                        </li> */}
+                        } 
                     </ul>
                 </div>
 

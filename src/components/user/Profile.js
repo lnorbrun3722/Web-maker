@@ -56,7 +56,7 @@ export default class Profile extends Component {
             <div>
                 <nav className="navbar navbar-dark bg-primary fixed-top">
                     <span className="navbar-brand mb-0 h1">Profile</span>
-                    <button className='btn' form="profileForm" href="profile.html">
+                    <button className='btn' form="profileForm">
                         <i className="fas fa-check"></i>
                     </button>
                 </nav>
@@ -65,7 +65,7 @@ export default class Profile extends Component {
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
                             <input
-                                placeholder="Enter or edit your username..."
+                                placeholder="Enter your username..."
                                 className="form-control"
                                 type="text"
                                 id="username"
@@ -77,7 +77,7 @@ export default class Profile extends Component {
                         <div className="form-group">
                             <label htmlFor="email">Email</label>
                             <input
-                                placeholder="Enter or edit your email address..."
+                                placeholder="Enter your email address..."
                                 type="email"
                                 className="form-control"
                                 id="email"
@@ -89,7 +89,7 @@ export default class Profile extends Component {
                         <div className="form-group">
                             <label htmlFor="firstName">First Name</label>
                             <input
-                                placeholder="Enter or edit your first name..."
+                                placeholder="Enter your first name..."
                                 className="form-control"
                                 type="text"
                                 id="firstName"
@@ -101,7 +101,7 @@ export default class Profile extends Component {
                         <div className="form-group">
                             <label htmlFor="lastName">Last Name</label>
                             <input
-                                placeholder="Enter or edit your last name..."
+                                placeholder="Enter your last name..."
                                 type="text"
                                 className="form-control"
                                 id="lastName"
