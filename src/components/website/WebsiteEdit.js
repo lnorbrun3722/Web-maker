@@ -1,40 +1,35 @@
 import React, { Component } from "react";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default class WebsiteEdit extends Component {
-
-    state={
+    state = {
         uid: this.props.match.params.uid,
         wid: this.props.match.params.wid,
         websites: [],
         name: "",
         description: ""
-    }
+    };
 
-    componentDidMount(){
-        this.filterWebsites(this.props.websites);
+    async componentDidMount() {
+        const res = await axios.get(`/api/user/${this.state.uid}/website`);
+        await this.filterWebsites(res.data);
         this.getWebsite(this.state.wid);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.match.params.wid !== this.props.match.params.wid) {
-            this.getWebsite(this.props.match.params.wid)
-        }
-    }
-
-    filterWebsites = (websites) => {
+    filterWebsites = websites => {
         const newWebsites = websites.filter(
-            website => (website.developerId === this.state.uid)
-        )
+            website => website.developerId === this.state.uid
+        );
         this.setState({
             websites: newWebsites
-        })
-    }
+        });
+    };
 
-    getWebsite = (wid) => {
+    getWebsite = wid => {
         let currentWeb;
-        for(let website of this.props.websites) {
-            if(website._id === wid) {
+        for (let website of this.state.websites) {
+            if (website._id === wid) {
                 currentWeb = website;
                 break;
             }
@@ -43,60 +38,62 @@ export default class WebsiteEdit extends Component {
             name: currentWeb.name,
             description: currentWeb.description
         });
-    }
+    };
 
     onChange = e => {
         this.setState({
             [e.target.name]: e.target.value
         });
-    }
+    };
 
-    delete = () =>{
-        this.props.deleteWeb(this.props.match.params.wid);
-        this.props.history.push(`/user/${this.state.uid}/website`)
-    }
-
-    onSubmit = e => {
-        e.preventDefault();
-        this.props.editWeb(this.props.match.params.wid, this.state.name, this.state.description);
+    delete = async () => {
+        await axios.delete(`/api/website/${this.state.wid}`);
         this.props.history.push(`/user/${this.state.uid}/website`);
-    }
+    };
 
+    onSubmit = async e => {
+        e.preventDefault();
+        // this.props.editWeb(
+        //     this.props.match.params.wid,
+        //     this.state.name,
+        //     this.state.description
+        // );
+        const newWeb = {
+            _id: this.state.wid,
+            name: this.state.name,
+            description: this.state.description,
+            developerId: this.state.uid
+        }
+        await axios.put("/api/website", newWeb);
+        this.props.history.push(`/user/${this.state.uid}/website`);
+    };
 
     render() {
-        const {uid} = this.state;
+        const { uid } = this.state;
         return (
             <div>
-                <nav className="navbar navbar-dark bg-primary fixed-top row nav-height">
-                    <div className="col-4 d-none d-sm-block">
-                        <Link className="color-white" to={`/user/${uid}/website`}>
+                <nav className="navbar navbar-dark bg-primary fixed-top row">
+                    <div className="col-lg-4 d-none d-lg-block text-center text-white">
+                        <Link className="float-left" to={`/user/${uid}/website`}>
                             <i className="fas fa-chevron-left" />
                         </Link>
-                        <Link className="color-white padding-left" to={`/user/${uid}/website`}>
-                            <h5 className="display-inline">Websites</h5>
-                        </Link>
+                        <span className="">Websites</span>
                         <Link
-                            className="color-white float-right"
+                            className="float-right"
                             to={`/user/${uid}/website/new`}
                         >
                             <i className="fas fa-plus" />
                         </Link>
                     </div>
-
-                    <div className="col-sm-8">
+                    <div className="col-lg-8 text-center text-white">
                         <Link
-                            className="color-white d-sm-none"
+                            className="d-lg-none float-left"
                             to={`/user/${uid}/website`}
                         >
                             <i className="fas fa-chevron-left" />
                         </Link>
-                        <span className="color-white padding-left">
-                            <h5 className="display-inline">Edit Website</h5>
-                        </span>
-                        <button
-                            className="color-white float-right btn"
-                            form="editWebForm"
-                        >
+                        <span >Edit Website</span>
+                        <button form="editWebForm" className="float-right btn">
                             <i className="fas fa-check" />
                         </button>
                     </div>
@@ -106,18 +103,28 @@ export default class WebsiteEdit extends Component {
                     <div className="col-4 d-none d-sm-block">
                         <div className="container-fluid">
                             <ul className="list-group">
-                            {
-                            this.state.websites.map(
-                                (website) => (
-                                    <li key={website._id} className="list-group-item">
-                                        <Link to={`/user/${uid}/website/${website._id}/page`}>{website.name}</Link>
-                                        <Link to={`/user/${uid}/website/${website._id}`} className="float-right">
-                                            <i className="fas fa-cog"></i>
+                                {this.state.websites.map(website => (
+                                    <li
+                                        key={website._id}
+                                        className="list-group-item"
+                                    >
+                                        <Link
+                                            to={`/user/${uid}/website/${
+                                                website._id
+                                            }/page`}
+                                        >
+                                            {website.name}
+                                        </Link>
+                                        <Link
+                                            to={`/user/${uid}/website/${
+                                                website._id
+                                            }`}
+                                            className="float-right"
+                                        >
+                                            <i className="fas fa-cog" />
                                         </Link>
                                     </li>
-                                )
-                            )
-                        }
+                                ))}
                             </ul>
                         </div>
                     </div>
@@ -152,8 +159,7 @@ export default class WebsiteEdit extends Component {
                                         value={this.state.description}
                                         onChange={this.onChange}
                                         placeholder="Describe the Website"
-                                    > 
-                                    </textarea>
+                                    />
                                 </div>
                                 <Link
                                     to={`/user/${uid}/website`}

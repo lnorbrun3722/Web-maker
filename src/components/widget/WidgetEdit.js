@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import WidgetHeading from './WidgetHeading';
 import WidgetImage from "./WidgetImage";
 import WidgetYoutube from "./WidgetYoutube";
+import Axios from 'axios';
 
 export default class WidgetEdit extends Component {
-
+    
     state={
         name: "",
         text: "",
@@ -26,16 +27,11 @@ export default class WidgetEdit extends Component {
         })
     }
 
-    getWidget = (wgid) => {
-        let currentWidget;
-        for(let widget of this.props.widgets){
-            if(widget._id === wgid){
-                currentWidget = widget;
-                break;
-            }
-        }
+    getWidget = async (wgid) => {
+        const res = await Axios.get(`/api/widget/${wgid}`);
+        const currentWidget = res.data;
         this.setState({
-            name: currentWidget.name, 
+            name: currentWidget.name? currentWidget.name : "",
             text: currentWidget.text,
             size: currentWidget.size,
             widgetType: currentWidget.widgetType,
@@ -63,14 +59,14 @@ export default class WidgetEdit extends Component {
             width,
             widgetType
         }
-
-        this.props.editWidget(newWidget);
+        
+        Axios.put("/api/widget", newWidget);
         this.props.history.push(`/user/${uid}/website/${wid}/page/${pid}/widget`)
     }
 
     onDelete = () => {
         const {uid, wid, pid} = this.state;
-        this.props.deleteWidget(this.props.match.params.wgid);
+        Axios.delete(`/api/widget/${this.props.match.params.wgid}`)
         this.props.history.push(`/user/${uid}/website/${wid}/page/${pid}/widget`)
     }
 
