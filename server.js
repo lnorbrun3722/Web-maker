@@ -1,4 +1,4 @@
-/ require is a node js keyword like "import"
+// require is a node js keyword like "import"
 
 // express library, create running server. can listen to incoming request
 const express = require("express");
